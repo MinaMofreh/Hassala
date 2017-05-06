@@ -44,7 +44,7 @@ if (isset($_POST['login'])) {
         <link rel="stylesheet" href="<?php echo $css ?>mina_css/login.css" />
         <link rel="stylesheet" href="<?php echo $css ?>mina_css/AddStudent.css" />  
     </head>
-    <form class="login" action="" method="POST">
+    <form class="login" action="Admin.php" method="POST">
         <h2> Admin Login </h2>
         <input class="form-control" type="text" name="username" placeholder="userName..." />
         <input class="form-control" type="password" name="password" placeholder="password..." />

@@ -393,9 +393,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="hidden" id ="verification_code" name="verification_code">
 
     </form>
-    <script src="../js/jquery-1.12.1.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/backend.js"></script>
+    <script src="<?php echo $js?>mina_js/backend.js"></script>
 </body>
 </html>
 <script>
@@ -406,7 +404,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     var DR_name = $("#firstname").val();
                     var codeforces_handle = $("#cfHandle").val();
                     var str = name + ":" + codeforces_handle + ":" + email + ":" + DR_name;
-                    $.post('../ajax/ajax_verify_instructor.php', {
+                    $.post('<?php echo dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'ajax'.DIRECTORY_SEPARATOR;?>ajax_verify_instructor.php', {
                         str: str
                     }, function (html) {
                         $("#verification_code").val(html);

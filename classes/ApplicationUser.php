@@ -24,6 +24,7 @@ class ApplicationUser extends Person {
     private $University;
     private $codeForces_handle;
     private $solvedProblems;
+    private $profilePic;
 
     // setters
     public function set_firstName($firstName) {
@@ -52,6 +53,13 @@ class ApplicationUser extends Person {
 
     public function increment_solvedProblems() {
         $this->solvedProblems++;
+    }
+
+    public function set_profilePic($file_extn, $file_temp) {
+        $tmp_path = $this->Create_profilePath($file_extn);
+        $this->profilePic = $tmp_path;
+        move_uploaded_file($file_temp, $tmp_path);
+        return $tmp_path;
     }
 
     // getters
@@ -83,28 +91,71 @@ class ApplicationUser extends Person {
         return $this->solvedProblems;
     }
 
-    public function SignUp() {
-        
+    public function SignUp($param){
     }
 
-    public function login($username, $pass) {
-        $data = $this->get_username_password($username, $pass);
+    private function Create_profilePath($file_extn) {
+        return 'ProfileImages/' . substr(md5(time()), 0, 10) . '.' . $file_extn;
+    }
 
-        if ($data['user_name'] == $username && $data['password'] == $pass) {
-            if ($data['type'] == 0) {// student
-                echo 'student';
-            } else if ($data['type'] == 1) { // instructor
-            }
-        } else {
-            return False;
+    private function start_session($data_array, $type) {
+        if ($type == 'student') {
+            session_start();
+            $_SESSION['student_id'] = $data_array['student_id'];
+            $_SESSION['college_id'] = $data_array['college_id'];
+            $_SESSION['first_name'] = $data_array['first_name'];
+            $_SESSION['last_name'] = $data_array['last_name'];
+            $_SESSION['university'] = $data_array['university'];
+            $_SESSION['rate'] = $data_array['rate'];
+            $_SESSION['email'] = $data_array['email'];
+            $_SESSION['solved_problems'] = $data_array['solved_problems'];
+            $_SESSION['profile_photo'] = $data_array['profile_photo'];
+            $_SESSION['gender'] = $data_array['gender'];
+            $_SESSION['codeforces_handle'] = $data_array['codeforces_handle'];
+            $_SESSION['qr_code_string'] = $data_array['qr_code_string'];
+            echo 'tmam';
+        } else if ($type == 'instructor') {
+            session_start();
+            $_SESSION['instructor_id'] = $data_array['instructor_id'];
+            $_SESSION['instructor_fname'] = $data_array['instructor_fname'];
+            $_SESSION['solved_problems'] = $data_array['solved_problems'];
+            $_SESSION['email'] = $data_array['email'];
+            $_SESSION['gender'] = $data_array['gender'];
+            $_SESSION['cf_handle'] = $data_array['cf_handle'];
+            $_SESSION['profile_photo'] = $data_array['profile_photo'];
         }
     }
 
-    public function Reset_pass($username, $password) {
+    public function login($username, $pass) {
+        if ($this->get_data_in_login($username, $pass)) {
+            return True;
+        }
+    }
+
+    private function get_data_in_login($username, $pass) {
+        $data = $this->get_username_password($username, $pass);
+        if ($data['user_name'] == $username && $data['password'] == $pass) {
+            // kda how login tmam we 3wzen ngeb el id 3lshan aload eladata we start session we ashof tabel 
+            // ellook up role 
+            $db = new DataBase();
+            if ($data['type'] == '0') { //student
+                $data_array = $db->get_row_by_id($data['student_id'], 'Student', 'student_id');
+               echo 'tmam';
+                $this->start_session($data_array, 'student');
+            } else if ($data['type'] == 1) { // instructor
+                $data_array = $this->db->get_row_by_id($data['instructor_id'], 'Instructor', 'instructor_id');
+
+                $this->start_session($data_array, 'instructor');
+            }
+            return $data_array; // delete after testing
+        }
+    }
+
+    public function Reset_pass($username, $password, $id){
         
     }
 
-    public function EditeProfile($email, $first_name, $last_name) {
+    public function EditProfile($email, $first_name, $last_name) {
         //$this->SignUp($email, $first_name, $last_name);   
     }
 

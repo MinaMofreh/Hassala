@@ -17,7 +17,7 @@ class DataBase {
 
     private $host = "localhost";
     private $username = "root";
-    private $password = "";
+    private $password = "Fedora25:(";
     //private static $instance;// single database object i will explain it next section 
     private $db_name = "Hassala"; //your database name 
     private $mysqli; // 
@@ -28,7 +28,6 @@ class DataBase {
     }
 
     private function database_connect($database_host, $database_username, $database_password) {
-
         if ($c = new mysqli($database_host, $database_username, $database_password)) {
             return $c;
         } else {
@@ -54,7 +53,6 @@ class DataBase {
         }
 
         $q .= "(" . rtrim($n, ', ') . ") VALUES (" . rtrim($v, ', ') . ");";
-
         if ($this->database_query($q)) {
             return mysqli_insert_id($this->mysqli);
         } else
@@ -104,7 +102,7 @@ class DataBase {
      * @return associated array of rows 
      */
     public function database_all_assoc($database_result) {
-
+        $array_return = array();
         while ($row = mysqli_fetch_assoc($database_result)) {
             $array_return[] = $row;
         }

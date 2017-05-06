@@ -1,6 +1,5 @@
 <?php 
-require_once '../API/PHPMailer/PHPMailerAutoload.php';
-include_once 'Validator.php';
+include_once dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'initialize.inc.php';
 if(isset($_POST['str'])){
 	$val   = new validator();
 	$str   = $_POST['str'];

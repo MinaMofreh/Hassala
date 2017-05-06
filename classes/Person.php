@@ -12,15 +12,14 @@
  * @author root
  */
 include_once realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'initialize.inc.php');
-
+include_once dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.'user_queries.php';
 class Person {
 
     public $userName;
     public $password;
-    private $db;
+    public $db;
 
     public function __construct() {
-        $this->db = new DataBase();
     }
 
     public function set_username($str) {
@@ -40,17 +39,9 @@ class Person {
     }
 
     public function get_username_password($username, $password) {
-        $query = "SELECT `instructor_id`, `student_id`, `user_name`, `password`, `type` FROM `Users` WHERE `user_name` = '$username' AND   `password` = '$password'";
-        if ($query_run = mysqli_query($query)) {
-            if (mysqli_num_rows($query_run) == NULL) {
-                return False;
-            } else {
-                $query_row = mysqli_fetch_assoc($query_run);
-                return $query_row;
-            }
-        } else {
-            return False;
-        }
+       $user_query = new user_queries();
+       $result = $user_query->retrieve_username_password($username, $password);
+       return $result;
     }
 
 }

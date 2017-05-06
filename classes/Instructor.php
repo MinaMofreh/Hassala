@@ -22,7 +22,6 @@ class Instructor extends ApplicationUser {
     public $univerity = array();
     public $courses = array();
     private $val;  // object from validator class
-    private $db;
     private $fullName;
     private $verificationCode;
     private $inst_query;
@@ -308,6 +307,10 @@ class Instructor extends ApplicationUser {
         } else {
             return False;
         }
+    }
+
+    public function Reset_pass($username, $password,$id) {
+        
     }
 
 }

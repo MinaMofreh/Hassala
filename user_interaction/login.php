@@ -1,16 +1,17 @@
-      <link rel="stylesheet" href="css/bootstrap.min.css">
-      <link rel="stylesheet" href="css/home.css">
-      <link rel="stylesheet" href="css/font-awesome.min.css">
+
 <?php
-include_once '../classes/Validator.php';
-include_once '../classes/applicationuser.php';
+include_once realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'initialize.inc.php');
 $appUser = new ApplicationUser();
 $var = new Validator(); // included in application user which is extended
 if(isset($_POST['login'])){
- $userName = $var->secureData($_POST['username']);
- $password = $var->secureData($var->hashData($_POST['password']));
+ $userName = $_POST['username'];
+ $password = $var->hashData($_POST['password']);
 
-  $appUser->login($userName, $password);
+ if($appUser->login($userName, $password)){
+     echo 'login successs';
+ }else{
+     echo 'fail';
+ }
 
  if(strlen($userName) < 5 || empty($userName)){ ?>
    <style>
@@ -42,5 +43,3 @@ if(isset($_POST['login'])){
 }
 //check data and redirect
 ?>
-      <script type="text/javascript" href="js/bootstrap.min.js"></script>
-      <script type="text/javascript" href="js/jquery-1.12.1.min.js"></script>
