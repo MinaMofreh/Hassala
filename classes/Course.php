@@ -13,6 +13,7 @@
  */
 class Course {
     //put your code here
+    public $id;
     public $name;
     public $description;
     public $quizes = array();

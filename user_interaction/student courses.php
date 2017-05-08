@@ -1,165 +1,160 @@
 <?php
-session_start();
 include_once 'includes.html';
-include_once realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'initialize.inc.php');
-$student = new Student();
-$course = new Course();
+include_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'initialize.inc.php';
+session_start();
+if (isset($_SESSION['student'])) {
+    $student = new Student();
+    if (isset($_POST['Add'])) {
+        $course_data = explode(":", $_POST['taskOption']);
+        $course_id = $course_data[0];
+        $student->PartcipateCourse($course_id, $_SESSION['student_id']);
+    }
+    $student->set_firstName($_SESSION['first_name']);
+    $student->set_lastName($_SESSION['last_name']);
+    $student->set_email($_SESSION['email']);
+    $student->set_gender($_SESSION['gender']);
+    $student->set_username($_SESSION['username']);
+    $student->set_codeForces_handle($_SESSION['codeforces_handle']);
+    $student->set_univeristy($_SESSION['university']);
+    $student->set_college_id($_SESSION['college_id']);
+    $student->set_rate($_SESSION['rate']);
+    $courses = new Course();
+    $courses = $student->ViewCourse($_SESSION['student_id']);
+    $dates = array();
+    for ($ctr = 0; $ctr < count($courses); $ctr++) {
+        for ($ctr2 = 0; $ctr2 < count($courses[$ctr]->quizes); $ctr2++) {
+            $data2 = array(
+                "quiz_id" => $courses[$ctr]->quizes[$ctr2]->id,
+                "quiz_date" => $courses[$ctr]->quizes[$ctr2]->date,
+                "quiz_time" => $courses[$ctr]->quizes[$ctr2]->time,
+                "quiz_duration" => $courses[$ctr]->quizes[$ctr2]->duration,
+                "quiz_type" => $courses[$ctr]->quizes[$ctr2]->type
+            );
+            if ($student->IsPermitted($student->get_college_id(), $courses[$ctr]->quizes[$ctr2]->id) && !$student->IsQuized($_SESSION['student_id'], $courses[$ctr]->quizes[$ctr2]->id)) {
+                $dates[] = $data2;
+            }
+        }
+    }
+    if (isset($_POST['start_quiz'])) {
+
+        header('Location : do_quiz.php');
+    }
+    ?>
 
 
-	/**********************************************************************************************************************
-		Assume that there is an object of class Course and another objet of class Student,, when the student choose the new course, it will be added to his courses array.
-	**********************************************************************************************************************/
-
-	function generate_new_row($crs_name) {
-		echo '		<tr>
-						<td>' . $crs_name . '</td>
-						<td><a href="#">See materials</a></td>
-						<td><a href="#">Read the Describtion</a></td>
-					</tr> ';
-	}
 
 
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <!-- for internet explorer compatibality-->
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <!--first mobile meta-->
+            <title>student courses</title>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 
-  	function test_input($data) {
-	  $data = trim($data);
-	  $data = stripslashes($data);
-	  $data = htmlspecialchars($data);
-	  return $data;
-	}
-$error_counter = 0;
-$course_name = $student_id = "";
-//validation
-$student_id_error = $course_name_error = "";
+            <link rel="stylesheet" type="text/css" href="css/eyad_css/student courses_styleSheet.css">
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-	if (empty($_POST['course_name'])) {
-		$course_name_error = "This field is required.";
-		$error_counter++;
-	}
-	else {
-		$course_name = test_input($_POST['course_name']);
-	}
-	if (empty($_POST['student_id'])) {
-		$student_id_error = "This field is required.";
-		$error_counter++;
-		}
-	else {
-		$student_id = test_input($_POST['student_id']);
-	}
-
-	if ($error_counter == 0) {
-		$course->name = $course_name;
-		$student->courses[] = $course; //here i want to assign the $course object to the last element of courses[] array which belongs to the student
+        </head>
+        <body onload="updateQuizTime()">
+            <div class="container-fluid myContainer">
 
 
-	}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1>Your current courses:</h1><br><br>
+
+                        <!-- Start of the courses table-->
+                        <table class="table table-striped">
+                            <thead class="headTable">
+                                <tr>
+                                    <th>Course Name</th>
+                                    <th>Materials</th>
+                                    <th>Describtion</th>
+                                    <th>Quizs</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                for ($i = 0; $i < count($courses); $i++) {
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $courses[$i]->name; ?></td>
+                                        <td><?php
+                                            for ($j = 0; $j < count($courses[$i]->materials); $j++) {
+                                                echo '<a href = "' . $courses[$i]->materials[$j]->path . '">' . $courses[$i]->materials[$j]->title . '</a><br><br>';
+                                                ;
+                                            }
+                                            ?></td>
+                                        <td><?php echo $courses[$i]->description; ?></td><td>
+                                            <?php
+                                            for ($m = 0; $m < count($courses[$i]->quizes); $m++) {
+                                                ?><form method="POST" action="do_quiz.php"><button disabled="disabled" class="btn btn-primary" type="submit" id ="start_quiz_<?php echo $courses[$i]->quizes[$m]->id; ?>" name ="start_quiz" value = "">Start Quiz</button><br><br>
+                                                    <input value="<?php echo $courses[$i]->quizes[$m]->id; ?>" type="hidden" id ="quiz_id" name = "quiz_id"></form><?php }
+                                            ?>
+
+                                        </td> </tr><?php } ?>
+
+                            </tbody>
+                        </table>
+                        <hr> <br><br>
+                        <!-- End of the courses table-->
+                        <h2 style="color: #2d6a9f;">Add New Course</h2>
+                        <br><br><br>
+                    </div>
+                </div>
+                <!-- Start add new course div-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="toBeToggled" style="margin-top: -50px;">
+                            <h2>Choose a new course from the above menu:</h2>
+                            <br>
+                            <span>Course Name:</span> 
+                            <br><br>
+                            <form method="POST" action="">
+                                <select name="taskOption">
+                                    <?php
+                                    $courseav = $student->AvailableCourses($_SESSION['student_id']);
+                                    for ($i = 0; $i < count($courseav); $i++) {
+                                        echo '<option id = "' . $courseav[$i]->id . '">' . $courseav[$i]->id. ':' . $courseav[$i]->name . '</option>';
+                                    }
+                                    ?>  
+                                </select>
+                                <span style="color: red;"></span>
+                                <br><br>
+                                <button type="Submit" name="Add" class="btn-primary">
+                                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                                    Add Course
+                                </button>
+                            </form>
+                        </div>
+                        <!-- End add new course div-->
+                    </div>
+                </div>
+            </div>
+        </body>
+    </html>
+    <script>
+        function updateQuizTime() {
+            var quiz_data = <?php echo json_encode($dates); ?>;
+            setTimeout(function () {
+                $.post('ajax/ajax_update_time.php', {
+                    quiz_data: quiz_data
+                }, function (html2) {
+                    var possible = html2.split(/[:]/);
+                    var i;
+                    for (i = 0; i < possible.length; i++) {
+                        $("#start_quiz_" + possible[i]).attr("disabled", false);
+                    }
+                });
+            }, 1000);
+        }
+    </script><?php
+} else {
+    header('Location: home.php');
+    exit();
 }
 ?>
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<!-- for internet explorer compatibality-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--first mobile meta-->
-	<title>student courses</title>
-	 <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-	
-	<link rel="stylesheet" type="text/css" href="<?php echo $css?>eyad_css/student courses_styleSheet.css">
-
-</head>
-<body>
-	<div class="container-fluid myContainer">
-
-
-			<div class="row">
-	  			<div class="col-md-12">
-	  						<h1>Your current courses:</h1><br><br>
-
-			<!-- Start of the courses table-->
-			<table class="table table-striped">
-				<thead class="headTable">
-					<tr>
-						<th>Course Name</th>
-						<th>Materials</th>
-						<th>Describtion</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Operating Systmes - I</td>
-						<td><a href="#">See materials</a></td>
-						<td><a href="#">Read the Describtion</a></td>
-					</tr>
-					<tr>
-						<td>Software Engineering - I</td>
-						<td><a href="#">See materials</a></td>
-						<td><a href="#">Read the Describtion</a></td>
-					</tr>
-					<tr>
-						<td>Computer Networks - I</td>
-						<td><a href="#">See materials</a></td>
-						<td><a href="#">Read the Describtion</a></td>
-					</tr>
-					<tr>
-						<td>Data Structures &amp; Algorithms</td>
-						<td><a href="#">See materials</a></td>
-						<td><a href="#">Read the Describtion</a></td>
-					</tr>
-					<tr>
-						<td>Discrete Mathematics</td>
-						<td><a href="#">See materials</a></td>
-						<td><a href="#">Read the Describtion</a></td>
-					</tr>
-					<tr>
-						<td>Programming - III</td>
-						<td><a href="#">See materials</a></td>
-						<td><a href="#">Read the Describtion</a></td>
-					</tr>
-					<?php
-					if ($error_counter == 0) {
-						generate_new_row($course_name);
-					}
-					?>
-				</tbody>
-			</table>
-			<hr> <br><br>
-			<!-- End of the courses table-->
-	  					<h2 style="color: #2d6a9f;">Add New Course</h2>
-	  				<br><br><br>
-	  			</div>
-			</div>
-			<!-- Start add new course div-->
-			<div class="row">
-				<div class="col-md-12">
-					<div class="toBeToggled" style="margin-top: -50px;">
-						<form method="POST" action="">
-							<h2>Choose a new course from the above menu:</h2>
-								<br>
-								<span>Course Name:</span> &nbsp; &nbsp;
-								<input type="text" name="course_name">
-								<span style="color: red;"><?php echo $course_name_error; ?></span>
-								<br><br>
-								<span class="id_p">Your ID:</span>
-								<input type="text" name="student_id" placeholder="20150000">
-								<span style="color: red;"><?php echo $student_id_error; ?></span>
-								<br><br>
-								<button type="Submit" class="btn-primary">
-									<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
-										Add Course
-								</button>
-							</form>
-		  			</div>
-		  			 <!-- End add new course div-->
-	  			 </div>
-	  		</div>
-  	</div>
-</body>
-</html>

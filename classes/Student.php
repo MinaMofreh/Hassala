@@ -11,7 +11,7 @@
  *
  * @author root
  */
-include_once dirname(dirname(__FILE__)). DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR .'studentQueries.php';
+include_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'studentQueries.php';
 include_once 'ApplicationUser.php';
 include_once 'Course.php';
 include_once 'Quiz.php';
@@ -38,20 +38,47 @@ class Student extends ApplicationUser {
         $this->stu_query = new studentQueries();
     }
 
-    public function PartcipateCourse($param) {
-        
+    public function PartcipateCourse($CourseID, $StudentID) {
+        $this->stu_query->JoinCourse($CourseID, $StudentID);
     }
 
-    public function TakeQuiz($CourseName) {
+    public function ViewCourse($ID) {
+        $this->courses = $this->stu_query->getCourses($ID);
+        return $this->courses;
+    }
+
+    public function IsPermitted($Student_College_ID, $QuizID) {
+        $Qry = "SELECT * FROM `quiz_permitted_students` WHERE `quiz_id` = $QuizID AND `student_college_id` = $Student_College_ID";
+        //print_r($this->DB->database_query($Qry) );
+        if ($this->DB->database_all_assoc($this->DB->database_query($Qry)) == NULL)
+            return FALSE;
+        else
+            return TRUE;
+    }
+
+    public function IsQuized($StudentID, $QuizID) {
+        $Qry = "SELECT * FROM `solve_quiz` WHERE `quiz_id` = $QuizID AND `student_id` = $StudentID";
+        if ($this->DB->database_all_assoc($this->DB->database_query($Qry)) == NULL)
+            return FALSE;
+        else
+            return TRUE;
+    }
+
+    public function AvailableCourses($StudentID) {
+        $courses = $this->stu_query->getAvailableCourses($StudentID);
+        return $courses;
+    }
+
+    public function TakeQuiz($QuizID) {
         /*         * **************
          * 
-         * Select Course And Fill Data 
+         * Select Course And Fill Data s
          * 
          * ************** */
-        $CourseID = $this->DB->getValueFromCoulmn("Course", "course_id", "course_name", $CourseName);
-        $sql_query = "SELECT * FROM `Quiz` WHERE `course_id` = $CourseID";
+        $sql_query = "SELECT * FROM `Quiz` WHERE `quiz_id` = $QuizID";
         $quiz_query = $this->DB->database_query($sql_query);
         $QuzArr = $this->DB->database_all_assoc($quiz_query);
+
         $Quiz = new Quiz();
         $quiz_id = $QuzArr[0]["quiz_id"];
         $Quiz->id = $quiz_id;
@@ -124,6 +151,7 @@ class Student extends ApplicationUser {
             }
             $Quiz->problems[] = $problem;
         }
+
         //Object finally filled
         return $Quiz;
     }
@@ -243,8 +271,59 @@ class Student extends ApplicationUser {
         return $grade;
     }
 
-    private function RemarkProblem($Stdn_Prblm, $Problem_Quiz, $QuizID) {
-        return 0;
+    private function RemarkProblem($Stdn_Prblm, $Problem_Quiz, $QuizID, $studentID) {
+        $student_folder = shell_exec("mkdir student_problem/student_$studentID");
+
+        for ($i = 0; $i < count($Problem_Quiz); $i++) {
+            $problem_id = $Problem_Quiz[$i]->problem_id;
+            shell_exec("mkdir student_problem/problem_$problem_id");
+            for ($j = 0; $j < count($Problem_Quiz[$i]->test_case); $j++) {
+                $test_case_input = $Problem_Quiz[$i]->test_case[$j]->input . "#";
+                $myfile_input = fopen("student_problem/problem_$problem_id/inputfile.txt", "a") or die("Unable to open file");
+                fwrite($myfile_input, $test_case_input);
+                fclose($myfile_input);
+                $test_case_output = $Problem_Quiz[$i]->test_case[$j]->output;
+                $myfile_output = fopen("student_problem/problem_$problem_id/outputfile.txt", "a") or die("Unable to open file");
+                fwrite($myfile_output, $test_case_output);
+                fclose($myfile_output);
+            }
+        }
+        for ($k = 0; $k < count($Stdn_Prblm); $k++) {
+            $student_problem_id = $Stdn_Prblm[$k]->problem_id;
+            shell_exec("mkdir student_problem/student_$studentID/$student_problem_id");
+            $student_code = fopen("student_problem/student_$studentID/$student_problem_id/code.cpp", "w+") or die("Unable to open file");
+            $compile_code = $Stdn_Prblm[$i]->student_code;
+            fwrite($student_code, $compile_code);
+            fclose($student_code);
+            $compile_output = shell_exec("g++ /var/www/html/classes/student_problem/student_$studentID/$student_problem_id/code.cpp"
+                    . " -o /var/www/html/classes/student_problem/student_$studentID/$student_problem_id/a.out");
+            if ($compile_output == NULL) {
+                $running_output = shell_exec("LD_PRELOAD=/var/www/html/classes/EasySandbox-master/EasySandbox.so "
+                        . "/var/www/html/classes/student_problem/student_$studentID/$student_problem_id/a.out");
+                if ($running_output != "Killed") {
+                    $test_program_command = "sh student_programs/bashfile.sh /var/www/html/classes/student_problem/problem_$problem_id/inputfile.txt" .
+                            "student_problem/student_$studentID/$student_problem_id/a.out" .
+                            "/var/www/html/classes/student_problem/student_$studentID/$student_problem_id/program_output.txt";
+                    $test_program_output = shell_exec($test_program_command);
+                    if ($test_program_output == NULL) {
+                        $test_program_results_command = "diff -iwbBZ student_problem/problem_$problem_id/outputfile.txt" .
+                                "student_problem/student_$studentID/$student_problem_id/program_output.txt";
+                        $test_program_results_output = shell_exec($test_program_results_command);
+                        if ($test_program_results_output == NULL) {
+                            $Stdn_Prblm[$k]->problem_status = TRUE;
+                        } else {
+                            $Stdn_Prblm[$k]->problem_status = FALSE;
+                        }
+                    }
+                } else {
+                    $Stdn_Prblm[$k]->problem_status = FALSE;
+                }
+            }
+        }
+    }
+
+    public function EditProfile($id, $username, $password, $profile_picture) {
+        $this->stu_query->updateData($id, $username, $password, $profile_picture);
     }
 
 }

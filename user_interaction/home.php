@@ -7,7 +7,7 @@ include 'login.php';
 $admin = new Admin();
 $result = $admin->GenerateStatistics();
 $browser = get_browser(null, true);
-$browserType = /* $browser['browser'] */ 'Firefox';
+$browserType = /*$browser['browser']*/ "Firefox";
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,7 +30,7 @@ $browserType = /* $browser['browser'] */ 'Firefox';
                 var data = google.visualization.arrayToDataTable(<?php echo $result; ?>);
 
                 var options = {
-                    title: 'Problem solving statisitics for each Univirsity.',
+                    title: 'Users from each university',
                     is3D: true,
                 };
                 var chart = new google.visualization.PieChart(document.getElementById('piechart'));
@@ -56,9 +56,10 @@ $browserType = /* $browser['browser'] */ 'Firefox';
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <div class="navbar-header">
                         <a class="navbar-brand" href="#" dir='rtl' lang='ar'>حَصَّالَة</a>
-                        <ul class="nav navbar-nav">
-                            <li class="active"><a href="#">Front Page</a></li>
-                        </ul>
+                        <a class="github-logo" rel="home" href="https://github.com/andrewnagyeb/Hassala" title="Github project" target="_blank">
+                            <img style="max-width:100px;max-height: 45px;"
+                                 src="<?php echo $images; ?>GitHub-Mark-120px-plus.png" class="github-logo-img">
+                        </a>
                     </div>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
@@ -76,7 +77,6 @@ $browserType = /* $browser['browser'] */ 'Firefox';
         </nav>
 
         <!--********************** end nav bar ****************-->
-
         <div class="modal fade" id="myModal1" role="dialog">
             <div class="modal-dialog">
 
@@ -108,13 +108,15 @@ $browserType = /* $browser['browser'] */ 'Firefox';
 
                         </div>
 
-                        <div class="modal-footer"> <?php if ($browserType == 'Firefox') {
-    echo '
-          <a style="color:red;" href="redirectories/index.php">Forget Password</a>
+                        <div class="modal-footer"> <?php
+                            if ($browserType == 'Firefox') {
+                                echo '
+          <a style="color:red;" href="redirectories/index.php">Forget Password(Student)</a>
           ';
-} else {
-    echo 'Forget password feature only allowed on Mozila browser';
-} ?> 
+                            } else {
+                                echo 'Forget password(Student) feature only allowed on Mozila browser<br>';
+                            }
+                            ?>                    <a style="color:red;" href="redirectories/instructorForgetPass.php">- Forget Password(instructor)</a> 
                             <button type="submit" class="btn btn-success" name="login">Login</button>   
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
@@ -182,7 +184,7 @@ $browserType = /* $browser['browser'] */ 'Firefox';
 
                     <div id="texttt" class="carousel-inner" role="listbox">
                         <div class="item active">
-                            <img src="<?php echo $images; ?>mina_images/p56.jpeg" alt="BOOKS"/>
+                            <img width="100%" src="<?php echo $images; ?>mina_images/p56.jpeg" alt="BOOKS"/>
                         </div>
 
                         <div class="item">
@@ -208,83 +210,85 @@ $browserType = /* $browser['browser'] */ 'Firefox';
             </div> 
         </div>
         <!--********************** end slider********************-->
+    </div>
+    <div class="container">
 
         <div class="row">
-            <div class="col-md-6 stat" id="piechart"></div>
+            <div class="col-md-6 stat" id="piechart" ></div>
             <hr>
         </div>
-    </div>
-    <section class="aboutUs text-center">
-        <div class="container aboutUsContainer">
-            <h1>About Us</h1>
-            <hr>
-            <p>We are all a team of computer science students in the Faculty of Computers and Information -Helwan University-<br>
-                we developed this wep application to be our project for Software Engineering Course Under supervision
-                of Dr. <b>Ghada Khoriba</b>.<br>
-                Our project will be totally <b>open source</b> project and it's okay to any one to keep on developing it.<br><br></p>
-            <br>
-            <h2>Project Scope</h2>
-            <h3>Online Judge</h3>
-            <p>Our web application scope includes online judging feature for problem
-                sets(in C/C++), which could compile, run &amp; return a solving status to the
-                user.</p>
-            <h3>Course Management</h3>
-            <p>It is also allowing professors to create courses and assign their materials and write
-                their description. Moreover, they can create online judging problems and
-                provide their test cases. They're also allowed to create quizzes and determine
-                their time , when quiz's time is finished, an auto-generated PDF file is sent
-                to the instructor includes students names and their assigned grades. If an
-                essay plagiarism is found , an immediate e-mail is sent to the doctor includes
-                students names . Professors can create contests between course's participants</p>
-            <h3>Server Contests</h3>
-            <p>Our server-side developers will be creating contests between all students in
-                Egypt. their processes should go as mentioned below:<br>
-                -Local contest between same college students.<br>
-                -Winners of local contest will be advanced to a national one between all
-                colleges.<br>
-                -Winners of national competition will be honored.</p>
-            <h3>Rating</h3>
-            <p>Rating feature is one of the most in
-                uential features. Colleges will be rated
-                on a scale from 1 to 10 depending on how many students of the college have
-                solved problem sets which is made by the server-side developers. And so will
-                do students , they're going to be rated as well. List will be made at all web
-                application's pages shows them all time.</p>
-            <h3>ID Detecting</h3>
-            <p>Changing registration criteria from being accepting new participants manu-
-                ally to an auto-detecting feature, which checks whether the uploaded image
-                conrms to our terms & conditions.</p>
-            <h3>Open Source</h3>
-            <p>Our vision after finishing the project is uploading it to <b>GitHub</b> so we can
-                help and inspire developers to innovate. We'll also allow contributions in
-                order to achieve professional service to participants.</p>
-            <br><br><br>
-            <h2>Project Developers</h2>
-            <br>
-            <div class="Photos">
-                <div class="eyadId">
-                    <img class="circled" src="images/about_us/eyad.jpg">
-                    <span class="eyadName">Eyad Mohammad</span>  
-                </div>
-                <div class="andrewId">
-                    <img class="circled" src="images/about_us/andrew.jpg">
-                    <span class="andrewName">Andrew Amir</span>
-                </div>
-                <div class="yassenId">
-                    <img class="circled" src="images/about_us/yassen.jpg">
-                    <span class="yassenName">Yassen Mehrez</span>
-                </div>
-                <div class="johnId">
-                    <img class="circled" src="images/about_us/john.jpg">
-                    <span class="johnName">John Nabil</span>
-                </div>
-                <div class="minaId">
-                    <img class="circled" src="images/about_us/mina.jpg">
-                    <span class="minaName">Mina Mofreh</span>
+        <section class="aboutUs text-center">
+            <div class="container aboutUsContainer">
+                <h1>About Us</h1>
+                <hr>
+                <p>We are all a team of computer science students in the Faculty of Computers and Information -Helwan University-<br>
+                    we developed this wep application to be our project for Software Engineering Course Under supervision
+                    of Dr. <b>Ghada Khoriba</b>.<br>
+                    Our project will be totally <b>open source</b> project and it's okay to any one to keep on developing it.<br><br></p>
+                <br>
+                <h2>Project Scope</h2>
+                <h3>Online Judge</h3>
+                <p>Our web application scope includes online judging feature for problem
+                    sets(in C/C++), which could compile, run &amp; return a solving status to the
+                    user.</p>
+                <h3>Course Management</h3>
+                <p>It is also allowing professors to create courses and assign their materials and write
+                    their description. Moreover, they can create online judging problems and
+                    provide their test cases. They're also allowed to create quizzes and determine
+                    their time , when quiz's time is finished, an auto-generated PDF file is sent
+                    to the instructor includes students names and their assigned grades. If an
+                    essay plagiarism is found , an immediate e-mail is sent to the doctor includes
+                    students names . Professors can create contests between course's participants</p>
+                <h3>Server Contests</h3>
+                <p>Our server-side developers will be creating contests between all students in
+                    Egypt. their processes should go as mentioned below:<br>
+                    -Local contest between same college students.<br>
+                    -Winners of local contest will be advanced to a national one between all
+                    colleges.<br>
+                    -Winners of national competition will be honored.</p>
+                <h3>Rating</h3>
+                <p>Rating feature is one of the most in
+                    uential features. Colleges will be rated
+                    on a scale from 1 to 10 depending on how many students of the college have
+                    solved problem sets which is made by the server-side developers. And so will
+                    do students , they're going to be rated as well. List will be made at all web
+                    application's pages shows them all time.</p>
+                <h3>ID Detecting</h3>
+                <p>Changing registration criteria from being accepting new participants manu-
+                    ally to an auto-detecting feature, which checks whether the uploaded image
+                    conrms to our terms & conditions.</p>
+                <h3>Open Source</h3>
+                <p>Our vision after finishing the project is uploading it to <b>GitHub</b> so we can
+                    help and inspire developers to innovate. We'll also allow contributions in
+                    order to achieve professional service to participants.</p>
+                <br><br><br>
+                <h2>Project Developers</h2>
+                <br>
+                <div class="Photos">
+                    <div class="eyadId">
+                        <img class="circled" src="images/about_us/eyad.jpg">
+                        <span class="eyadName">Eyad Mohammad</span>  
+                    </div>
+                    <div class="andrewId">
+                        <img class="circled" src="images/about_us/andrew.jpg">
+                        <span class="andrewName">Andrew Amir</span>
+                    </div>
+                    <div class="yassenId">
+                        <img class="circled" src="images/about_us/yassen.jpg">
+                        <span class="yassenName">Yassen Mehrez</span>
+                    </div>
+                    <div class="johnId">
+                        <img class="circled" src="images/about_us/john.jpg">
+                        <span class="johnName">John Nabil</span>
+                    </div>
+                    <div class="minaId">
+                        <img class="circled" src="images/about_us/mina.jpg">
+                        <span class="minaName">Mina Mofreh</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
 
 
@@ -309,11 +313,6 @@ $browserType = /* $browser['browser'] */ 'Firefox';
                     <h3 class="sitemap">Sitemap</h3>
                     <ul class="list-unstyled">
                         <li><a href="#">Home</a></li>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Quizzes</a></li>
-                        <li><a href="#">Our Judge</a></li>
-                        <li><a href="#">Regster New Course</a></li>
-                        <li><a href="#">National compitation</a></li>
                     </ul>
                     <br><br><br>
                     <center><p class="copyrights">All rights not received <span class="copyleft">&copy;</span></p></center>
@@ -333,6 +332,4 @@ $browserType = /* $browser['browser'] */ 'Firefox';
             </div>
         </div>
     </section>
-    <script type="text/javascript" href="js/bootstrap.min.js"></script>
-    <script type="text/javascript" href="js/jquery-1.12.1.min.js"></script>
     <!--*****EYAD**************end footer********************-->

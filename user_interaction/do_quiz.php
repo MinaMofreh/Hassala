@@ -1,8 +1,9 @@
 <?php
 session_start();
+include_once 'includes' . DIRECTORY_SEPARATOR . 'studentnav.inc.php';
 include_once 'includes.html';
 include_once realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'initialize.inc.php');
-if (true) {
+if ($_SESSION['student']) {
     if (!isset($_SESSION['student-question-answer'])) {
         $_SESSION['student-question-answer'] = array();
     }
@@ -14,8 +15,8 @@ if (true) {
     $student = new Student();
     $_SESSION['student_id'] = "20150153";
     $QUIZ = new Quiz();
-    $CourseName = "Programming";
-    $QUIZ = $student->TakeQuiz($CourseName);
+    $quiz_id = $_POST['quiz_id'];
+    $QUIZ = $student->TakeQuiz($quiz_id);
 
     // -------------------------------------
     //defines the question number in quesitons array
@@ -33,7 +34,16 @@ if (true) {
     //total number of questions which are answered
     $total_attempts = 0;
     if (isset($_POST['submit-quiz'])) {
-        print_r($_SESSION['student-answers']);
+        if (isset($_POST['radio'])) {
+            if ($_SESSION['student-question-answer'][(count($QUIZ->questions)-1)]->student_answer != null){
+                $_SESSION['student-question-answer'][(count($QUIZ->questions)-1)]->student_answer = $_POST['radio'];
+            }
+        } else {
+            if ($_SESSION['student-problem-answer'][(count($QUIZ->questions)-1)]->student_code != null){
+                $_SESSION['student-problem-answer'][(count($QUIZ->questions)-1)]->student_code = $_POST['student_code'];
+            }
+        }
+            $student->RemarkQuiz($Quiz, $_SESSION['student-question-answer'], $_SESSION['student-problem-answer'], $_SESSION['student_id']);
     }
     ?>
     <!DOCTYPE html>
@@ -46,13 +56,21 @@ if (true) {
         <center><h1>Turning JavaScript on is a must to do this quiz!</h1></center>
         <style>div {display:none;}</style>
         </noscript>
+        <?php
+        echo '<script type="text/javascript">timer=' .  60 . '</script>';
+        ?>
+        <script>
+            window.onload = setTimeout(function () {
+
+            },<?php echo (60) * 1000; ?>)
+        </script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="<?php echo $css; ?>do_quiz_css/do_quiz_stylesheet.css">
         <script src="<?php echo $js; ?>do_quiz_js/countdown.js"></script>
         <script src="<?php echo $js; ?>do_quiz_js/on_active.js"></script>
         <script src="<?php echo $js; ?>do_quiz_js/buttons_script.js"></script>
     </head>
-    <body>
+    <body onload="submit_quiz()">
         <!--  Content Area-->
         <div class="container">
             <h1>EXAMINATION FORM <small>powered by Hassala FCI | All rights reserved</small></h1>
@@ -66,9 +84,6 @@ if (true) {
                     <pre><?php echo $QUIZ->description; ?></pre>
                     <!--------- Countdown Timer ----->
                     <div id='timer'>
-                        <?php
-                        echo '<script type="text/javascript">timer=' . $QUIZ->duration[1] * 60 . '</script>';
-                        ?>
                         <script src="<?php echo $js; ?>do_quiz_js/do_quiz_timer.js" type="text/javascript"></script>      
                     </div>
                     <!-------------------------------->
@@ -206,7 +221,7 @@ if (true) {
         </div>
     </body>
     <input type="hidden" id="last_q" value="1">
-    <input type="hidden" id="course_name" value="<?php echo $CourseName; ?>">
+    <input type="hidden" id="course_name" value="<?php echo $quiz_id; ?>">
     <input type="hidden" id="count" value="<?php echo $number_of_questions; ?>">
     <input type="hidden" id="last_p" value="1">
     <input type="hidden" id="total_questions" value="<?php echo $total_number_of_questions; ?>">
@@ -219,4 +234,5 @@ if (true) {
     include_once 'templates' . DIRECTORY_SEPARATOR . 'footer' . DIRECTORY_SEPARATOR . 'footer.inc.php';
 } else {
     header("Location: index.php");
-}
+    exit();
+}    

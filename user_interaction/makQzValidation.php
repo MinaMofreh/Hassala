@@ -1,5 +1,5 @@
 <?php
-
+if (isset($_SESSION['instructor'])){
 include_once realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'initialize.inc.php');
 
 class QuizData {
@@ -96,13 +96,12 @@ class QuizData {
                 $this->quiz_duration = $this->hours . ":" . $this->minutes . ":" . $this->seconds;
             }
 
-
-
-
-
             //if it's not set so $quizHeld = "" as default so the quiz will be helld all the day
             if (isset($_POST['quizTime'])) {
                 $this->quizHeld = $this->test_input($_POST['quizTime']);
+            }
+            if($this->error_counter == 0){
+                header("Location:make_quiz_questions.php");
             }
         }
     }
@@ -116,6 +115,7 @@ class QuizData {
             if (empty($_FILES['excelSheet']['name'])) {
                 $this->sheet_error = "you should upload the excel sheet";
                 $this->error_counter++;
+                return NULL;
             } else {
 
                 $file_name = $_FILES['excelSheet']['name'];
@@ -123,20 +123,22 @@ class QuizData {
                 $file_extn = strtolower(end(explode('.', $file_name)));
                 if (in_array($file_extn, $this->excelExtention)) {
                     $file_path = 'sheets/' . substr(md5(time()), 0, 10) . '.' . $file_extn;
-                    echo $file_path;
                     $this->filePath = $file_path;
                     move_uploaded_file($file_temp, $file_path);
                     //to check if it read the right data
-                    $a = $this->getStudentIds();
-                    print_r($a);
+                    $array = $this->getStudentIds();
+                    print_r($array);
+                    return $array;
                 } else {
                     $this->sheet_error = "Wrong Extension";
                     $this->error_counter++;
+                    return NULL;
                 }
             }
         } else {
             $this->sheet_error = "you should upload the excel sheet";
             $this->error_counter++;
+            return NULL;
         }
     }
 
@@ -162,5 +164,7 @@ class QuizData {
 
 //end of get student ids
 }
-
+} else {
+    header("Location: home.php");
+}
 ?>

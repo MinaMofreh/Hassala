@@ -11,7 +11,7 @@
  *
  * @author root
  */
-include_once dirname(dirname(__FILE__)). DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR .'adminQuery.php';
+include_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'adminQuery.php';
 include_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'user_interaction' . DIRECTORY_SEPARATOR . 'API' . DIRECTORY_SEPARATOR . 'PHPMailer' . DIRECTORY_SEPARATOR . 'PHPMailerAutoload.php';
 include_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'user_interaction' . DIRECTORY_SEPARATOR . 'API' . DIRECTORY_SEPARATOR . 'phpqrcode-master' . DIRECTORY_SEPARATOR . 'qrlib.php';
 include_once 'Person.php';
@@ -209,6 +209,46 @@ class Admin extends Person {
 
         $pdf->Output();
         $fileFullPath = $pdf->filePath . $pdf->name;
+    }
+
+    public static function send_pdf($name, $email, $quizTitle, $filePath) {
+        $mail = new PHPMailer; // create new object
+        $mail->isSMTP();                                      // Set mailer to use SMTP
+        $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = 'hassalafcih@gmail.com';                 // SMTP username
+        $mail->Password = '20150156';                           // SMTP password
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+
+        $mail->setFrom('from@example.com', 'Hsala');
+        $mail->addAddress($email, 'Joe User');     // Add a recipient
+        $mail->addReplyTo('hassalafcih@gmail.com', 'Admin');
+        $mail->addCC('cc@example.com');
+        $mail->addBCC('bcc@example.com');
+
+        $mail->addAttachment($filePath . '.pdf', 'QuizResult.pdf');    // Optional name
+        $mail->isHTML(true);                                  // Set email format to HTML
+
+        $mail->Subject = 'Welcome, DR ' . $name;
+        $mail->Body = 'Welcome Professor/' . $name . '<br>
+                      We would like to confirm that <b>' . $quizTitle . '</b> has been remarked.<br>
+                      Results are <b>attached</b> to the <strong>email</strong><br>
+                      Thank you.<br>
+                      <h4>Hassala Team.</h4> 
+                      <hr>
+                      //sitelink 
+                      <style>
+                       h4{
+                        color:blue;
+                       }
+                      </style>';
+
+        if (!$mail->send()) {
+            return True;
+        } else {
+            return False;
+        }
     }
 
 }

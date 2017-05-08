@@ -21,5 +21,6 @@ class Quiz {
     public $full_grade; 
     public $questions = array();
     public $problems = array();
+    public $type;
     
 }

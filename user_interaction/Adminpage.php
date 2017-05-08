@@ -42,7 +42,7 @@ if (isset($_SESSION['Admin'])) {
         }
 
 
-        if (empty($id) || !$val->alphaNumeric($id)) {
+        if (empty($id) || $val->alphaNumeric($id)) {
             $IdError = '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> please fill ID  with only <strong>AlphaNumeric</strong> Characters <span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>';
             $ErrorCounter++;
         } else {

@@ -37,7 +37,7 @@ $(function (){
 	  }else if(password.length >= 10){
 	  	$('#pass').html('<div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100"aria-valuemin="0" aria-valuemax="100" style="width:100%"> Strong </div></div>');
 	  }
-	  if(confirmPassword == password){
+	  if(confirmPassword == password && password.length != 0){
 	  $('#password_again').html('').css('background-color','#45f94e');	
 	  $('#conpass').html('Matched correctly').css('color','green');
 	  }else if(confirmPassword != password){

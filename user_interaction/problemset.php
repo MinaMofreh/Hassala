@@ -1,5 +1,13 @@
 <?php
+session_start();
+if(isset($_SESSION['student']) || isset($_SESSION['instructor'])){
+include_once 'includes.html';
 include_once realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR .'initialize.inc.php');
+if (isset($_SESSION['student'])){
+    $codeforces_handle = $_SESSION['codeforces_handle'];
+} else {
+    $codeforces_handle = $_SESSION['cf_handle'];
+}
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -19,6 +27,7 @@ and open the template in the editor.
     </head>
     <body>
         <div class="container">
+            <h1><?php echo $codeforces_handle;?></h1>
             <?php
             $url_problemset = 'http://codeforces.com/api/problemset.problems?tags=implementation';
             $curl_problemset = curl_init($url_problemset);
@@ -28,7 +37,7 @@ and open the template in the editor.
 
             $problem_count = count($problem_set->result->problems);
             // -----------------------------
-            $url_user = 'http://codeforces.com/api/user.status?handle=nagyebcf&from=1';
+            $url_user = 'http://codeforces.com/api/user.status?handle='.$codeforces_handle.'&from=1';
             $curl_user = curl_init($url_user);
             curl_setopt($curl_user, CURLOPT_RETURNTRANSFER, $url_user);
             $user_status = json_decode(curl_exec($curl_user));
@@ -85,3 +94,8 @@ and open the template in the editor.
         </div>
     </body>
 </html>
+<?php include_once 'templates' . DIRECTORY_SEPARATOR . 'footer' . DIRECTORY_SEPARATOR . 'footer.inc.php';} else {
+    header("Location: home.php");
+}
+?>
+

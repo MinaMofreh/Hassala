@@ -1,7 +1,7 @@
 /*footer Style*/
 @font-face {
     font-family: 'koffi'; 
-    src: url('al-muhareb2-mutawwar.ttf'); 
+    src: url('fonts/al-muhareb2-mutawwar.ttf'); 
 }
 .footer{
 	background-color: #060d14;

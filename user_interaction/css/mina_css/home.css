@@ -10,11 +10,10 @@ body{
 .navbar{
 	padding:0px;
 }
-.navbar-inverse .navbar-nav > .active >a{
-    background-color: red;
-    color:black;
-    font-family: cursive;
+.github-logo-img:hover {
+    color:red;
 }
+
 .navbar-brand{
 font-family: monospace;
     font-size: 40px;
@@ -51,9 +50,7 @@ font-family: monospace;
 body{background-color: #e6f3ff;}
 .aboutUsContainer {
 	background-color: #fff;
-	margin: 10px 55px 100px;
 	border-radius: 10px;
-	padding-bottom: 50px;
 }
 .circled{
 	background-color: #fff;

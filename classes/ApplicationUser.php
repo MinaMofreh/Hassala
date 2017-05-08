@@ -62,6 +62,10 @@ class ApplicationUser extends Person {
         return $tmp_path;
     }
 
+    public function get_image_path() {
+        return $this->profilePic;
+    }
+
     // getters
     public function get_firstName() {
         return $this->FirstName;
@@ -79,7 +83,7 @@ class ApplicationUser extends Person {
         return $this->Gender;
     }
 
-    public function get_univeristy() {
+    public function get_university() {
         return $this->University;
     }
 
@@ -88,42 +92,15 @@ class ApplicationUser extends Person {
     }
 
     public function get_solvedProblems() {
-        return $this->solvedProblems;
+        return 0;
     }
 
-    public function SignUp($param){
+    public function SignUp($param) {
+        
     }
 
     private function Create_profilePath($file_extn) {
-        return 'ProfileImages/' . substr(md5(time()), 0, 10) . '.' . $file_extn;
-    }
-
-    private function start_session($data_array, $type) {
-        if ($type == 'student') {
-            session_start();
-            $_SESSION['student_id'] = $data_array['student_id'];
-            $_SESSION['college_id'] = $data_array['college_id'];
-            $_SESSION['first_name'] = $data_array['first_name'];
-            $_SESSION['last_name'] = $data_array['last_name'];
-            $_SESSION['university'] = $data_array['university'];
-            $_SESSION['rate'] = $data_array['rate'];
-            $_SESSION['email'] = $data_array['email'];
-            $_SESSION['solved_problems'] = $data_array['solved_problems'];
-            $_SESSION['profile_photo'] = $data_array['profile_photo'];
-            $_SESSION['gender'] = $data_array['gender'];
-            $_SESSION['codeforces_handle'] = $data_array['codeforces_handle'];
-            $_SESSION['qr_code_string'] = $data_array['qr_code_string'];
-            echo 'tmam';
-        } else if ($type == 'instructor') {
-            session_start();
-            $_SESSION['instructor_id'] = $data_array['instructor_id'];
-            $_SESSION['instructor_fname'] = $data_array['instructor_fname'];
-            $_SESSION['solved_problems'] = $data_array['solved_problems'];
-            $_SESSION['email'] = $data_array['email'];
-            $_SESSION['gender'] = $data_array['gender'];
-            $_SESSION['cf_handle'] = $data_array['cf_handle'];
-            $_SESSION['profile_photo'] = $data_array['profile_photo'];
-        }
+        return 'redirectories/images/mina_images/ProfileImages/' . substr(md5(time()), 0, 10) . '.' . $file_extn;
     }
 
     public function login($username, $pass) {
@@ -140,27 +117,105 @@ class ApplicationUser extends Person {
             $db = new DataBase();
             if ($data['type'] == '0') { //student
                 $data_array = $db->get_row_by_id($data['student_id'], 'Student', 'student_id');
-               echo 'tmam';
-                $this->start_session($data_array, 'student');
+                $this->start_session($data_array, 'student', $data['user_name'], $data['password']);
             } else if ($data['type'] == 1) { // instructor
-                $data_array = $this->db->get_row_by_id($data['instructor_id'], 'Instructor', 'instructor_id');
-
-                $this->start_session($data_array, 'instructor');
+                $data_array = $db->get_row_by_id($data['instructor_id'], 'Instructor', 'instructor_id');
+                $this->start_session($data_array, 'instructor', $data['user_name'], $data['password']);
             }
             return $data_array; // delete after testing
         }
     }
 
-    public function Reset_pass($username, $password, $id){
+    public function Reset_pass($username, $password, $id) {
         
     }
 
-    public function EditProfile($email, $first_name, $last_name) {
+    public function EditProfile($username, $password, $profile_picture) {
         //$this->SignUp($email, $first_name, $last_name);   
     }
 
     public function SolveProblem($param) {
         
+    }
+
+    private function start_session($data_array, $type, $username, $pass) {
+        if ($type == 'student') {
+            session_start();
+            $_SESSION['student'] = "STUDENT";
+            $_SESSION['username'] = $username;
+            $_SESSION['password'] = $pass;
+            $_SESSION['student_id'] = $data_array['student_id'];
+            $_SESSION['college_id'] = $data_array['college_id'];
+            $_SESSION['first_name'] = $data_array['first_name'];
+            $_SESSION['last_name'] = $data_array['last_name'];
+            $_SESSION['university'] = $data_array['university'];
+            $_SESSION['rate'] = $data_array['rate'];
+            $_SESSION['email'] = $data_array['email'];
+            $_SESSION['solved_problems'] = $data_array['solved_problems'];
+            $_SESSION['profile_photo'] = $data_array['profile_photo'];
+            $_SESSION['gender'] = $data_array['gender'];
+            $_SESSION['codeforces_handle'] = $data_array['codeforces_handle'];
+            $_SESSION['qr_code_string'] = $data_array['qr_code_string'];
+        } else if ($type == 'instructor') {
+            session_start();
+            $_SESSION['instructor'] = "INSTRUCTOR";
+            $_SESSION['username'] = $username;
+            $_SESSION['password'] = $pass;
+            $_SESSION['instructor_id'] = $data_array['instructor_id'];
+            $_SESSION['instructor_fname'] = $data_array['instructor_fname'];
+            $_SESSION['solved_problems'] = $data_array['solved_problems'];
+            $_SESSION['email'] = $data_array['email'];
+            $_SESSION['gender'] = $data_array['gender'];
+            $_SESSION['cf_handle'] = $data_array['cf_handle'];
+            $_SESSION['profile_photo'] = $data_array['profile_photo'];
+        }
+    }
+
+    public function Logout() {
+        if (isset($_SESSION['instructor'])) {
+
+            unset($_SESSION['instructor']);
+            unset($_SESSION['instructor_id']);
+            unset($_SESSION['instructor_fname']);
+            unset($_SESSION['solved_problems']);
+            unset($_SESSION['email']);
+            unset($_SESSION['gender']);
+            unset($_SESSION['cf_handle']);
+            unset($_SESSION['profile_photo']);
+            unset($_SESSION['username']);
+            unset($_SESSION['password']);
+            header('location: home.php');
+        } else if (isset($_SESSION['student'])) {
+
+            unset($_SEESION['student']);
+            unset($_SEESION['student_id']);
+            unset($_SESSION['college_id']);
+            unset($_SESSION['first_name']);
+            unset($_SESSION['last_name']);
+            unset($_SESSION['university']);
+            unset($_SESSION['rate']);
+            unset($_SESSION['email']);
+            unset($_SESSION['solved_problems']);
+            unset($_SESSION['profile_photo']);
+            unset($_SESSION['gender']);
+            unset($_SESSION['codeforces_handle']);
+            unset($_SESSION['qr_code_string']);
+            unset($_SESSION['username']);
+            unset($_SESSION['password']);
+            header('location: home.php');
+        }
+    }
+
+    public function get_lookup() {
+        if (isset($_SESSION['student'])) {
+            $db = new Database();
+            $query = "SELECT `page_link` FROM role_pages WHERE `role_type` = 0";
+        } else {
+            $db = new Database();
+            $query = "SELECT `page_link` FROM role_pages WHERE `role_type` = 1";
+        }
+        $result = $db->get_row($query);
+        return $result['page_link'];
     }
 
 }

@@ -3,9 +3,8 @@ session_start();
 include_once 'includes.html';
 include_once realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'initialize.inc.php');
 $ERROR = FALSE;
-if (isset($_SERVER['Instructor']) || $_SERVER['Instructor'] == NULL) {
+if (isset($_SESSION['instructor'])) {
     $instructor = new Instructor();
-    $instructor = $_SERVER['Instructor'];
     if (isset($_POST['submit_course'])) {
         $course = new Course();
         $Vldtr = new Validator();
@@ -183,6 +182,6 @@ if (isset($_SERVER['Instructor']) || $_SERVER['Instructor'] == NULL) {
     </html>
     <?php
 } else {
-    header('Location: index.php');
+    header('Location: home.php');
 }
 ?>

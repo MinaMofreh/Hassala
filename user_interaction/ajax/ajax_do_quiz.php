@@ -113,7 +113,7 @@ if (isset($_POST['str'])) {
 if (isset($_POST['problem_answer']) && isset($_POST['last_p'])) {
     session_start();
     $problem_index = $_POST['last_p'];
-    $problem_object = explode(":", $_POST['problem-answer']);
+    $problem_object = explode(":", $_POST['problem_answer']);
     if ($_SESSION['student-problem-answer'][$problem_index] == null) {
         $problem = new student_quiz_problem();
         $problem->problem_id = $problem_object[0];
@@ -121,7 +121,7 @@ if (isset($_POST['problem_answer']) && isset($_POST['last_p'])) {
         $problem->student_code = $problem_object[2];
         $problem->problem_status = FALSE;
         $_SESSION['student-problem-answer'][] = $problem;
-    } else {
+    } else if ($_SESSION['student-question-answer'][$question_index]->student_answer != null) {
         $_SESSION['student-problem-answer'][$problem_index]->student_code = $problem_object[2];
     }
     print_r($_SESSION['student-problem-answer']);
@@ -140,7 +140,6 @@ if (isset($_POST['question_answer']) && isset($_POST['last_q'])) {
     } else if ($_SESSION['student-question-answer'][$question_index]->student_answer != null) {
         $_SESSION['student-question-answer'][$question_index]->student_answer = $question_object[0];
     }
-    print_r($_SESSION['student-question-answer']);
 }
 
 if (isset($_POST['solve_data'])) {

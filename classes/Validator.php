@@ -1,7 +1,6 @@
 <?php
-
+include_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR .'initialize.inc.php';
 class validator {
-
     public function GenrateVerificationCode($vr1, $vr2) {
         return substr(md5($vr1 . '7sala' . $vr2), 20);
     }
@@ -13,7 +12,7 @@ class validator {
 
     public function secureData($data) {
         if (!empty($data)) {
-            $data = trim(strip_tags(stripslashes(mysqli_real_escape_string($data))));
+            $data = trim(strip_tags(stripslashes(Database::sql_injection($data))));
             return $data;
         }
     }
@@ -27,7 +26,7 @@ class validator {
     }
 
     public function alphaNumeric($string) {
-        if (preg_match("'^[a-zA-Z0-9]+$'", $string)) {
+        if (preg_match("^[a-zA-Z0-9]+$", $string)) {
             return True;
         } else {
             return False;

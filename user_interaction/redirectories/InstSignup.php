@@ -10,16 +10,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // get and validate data from form
     $gender = $_POST['gender'];  // from comboBox
     $univeristy = $_POST['univeristy'];  // from comboBox
-    $Fname = $fun->secureData($_POST['firstname']);
-    $userName = $fun->secureData($_POST['username']);
-    $cf_handle = $fun->secureData($_POST['cfHandle']);
-    $email = $fun->secureData(filter_var($fun->secureData($_POST['email']), FILTER_SANITIZE_EMAIL));
-    $verifCode = $fun->secureData($_POST['vercode']);
-    $password = $fun->secureData($_POST['password']);
-    $confirmPass = $fun->secureData($_POST['password_again']);
+    $Fname = $_POST['firstname'];
+    $userName = $_POST['username'];
+    $cf_handle = $_POST['cfHandle'];
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $verifCode = $_POST['vercode'];
+    $password = $_POST['password'];
+    $confirmPass = $_POST['password_again'];
+    $image_path = '';
 // end getting form data
 // validate input data
     // variables to hold error message 
+    if (isset($_FILES['profile']) && !empty($_FILES['profile'])) {
+        $fileName = $_FILES['profile']['name'];
+        $fileSize = $_FILES['profile']['size'];
+        $file_temp = $_FILES['profile']['tmp_name'];
+        $file_extn = strtolower(end(explode('.', $fileName)));
+        //move_uploaded_file($file_temp, 'images/jkd.'.$file_extn);
+        $image_path = $inst->set_profilePic($file_extn, $file_temp);
+    } 
+
     $datahandle = '';
     $FnameError = '';
     $userNameError = '';
@@ -29,19 +39,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $emailError = '';
     $emailError1 = '';
     $cfhandleError = '';
+    $file_error = '';
     $ErrorHandler = '12345';
 
-    if (is_numeric($Fname) || empty($Fname) || $fun->ContainsNumbers($Fname)) {
+    if (is_numeric($Fname) || empty($Fname) || !$fun->ContainsNumbers($Fname)) {
         $FnameError = '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Error please fill <strong>Name</strong> with only alphabetic Characters <span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>';
         $ErrorHandler .= '1';
     } else if (!is_numeric($Fname) || !empty($Fname)) {
         $FnameError = '';
     }
 
-    if (is_numeric($userName) || empty($userName)) {
+    if (is_numeric($userName) || empty($userName) || $fun->alphaNumeric($userName)) {
         $userNameError = '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> please fill userName with only <strong>Alphanumeric</strong> Characters <span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>';
         $ErrorHandler .= '1';
-    } else if (!empty($userName) || !is_numeric($userName)) {
+    } else if (!empty($userName) || !is_numeric($userName) || !$fun->alphaNumeric($userName)) {
         $userNameError = '';
     }
 
@@ -68,10 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
 
-    if (strpos($email, 'fci') == False) {
+    if ((strpos($email, 'fci') == False)) {
         $emailError = '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Error please fill email contains domain : <strong>@fci</strong> <span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>';
         $ErrorHandler .= '1';
-    } else if (strpos($email, 'fci') !== False) {
+    } else if (strpos($email, 'fci') != False) {
         $emailError = '';
     }
 
@@ -83,14 +94,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if ($password != $confirmPass) {
-        $confirmPassError = '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Error couldnnot match with <strong>password</strong> code <span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>';
+        $confirmPassError = '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>Wrong Password<strong>please</strong> check it.<span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>';
         $ErrorHandler .= '1';
     } else if ($password == $confirmPass) {
         $confirmPassError = '';
     }
 
     if (empty($password)) {
-        $passwordError = '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> please fill <strong>password</strong> class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>';
+        $passwordError = '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Wrong Password <strong>please</strong> check it.<span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>';
         $ErrorHandler .= '1';
     } else if (!empty($password)) {
         $passwordError = '';
@@ -163,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <body>
 
 
-        <form action="<?php echo $_SERVER['PHP_SELF'] ?>"  id="myform" method="post" class="form-horizontal">
+        <form action="<?php echo $_SERVER['PHP_SELF'] ?>"  id="myform" method="post" class="form-horizontal" enctype="multipart/form-data">
 
 
             <h2>Instructor-SignUp</h2>
@@ -386,14 +397,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="form-group">
             <label class="col-md-4 control-label" for="profile">Profile picture</label>
             <div class="col-md-6">
-                <input type="file" id="file">
+                <input type="file" id="file" name="profile">
             </div>
         </div>
         <input class="btn btn-primary btn-block" type="submit" name="register" value="Register" />
         <input type="hidden" id ="verification_code" name="verification_code">
 
     </form>
-    <script src="<?php echo $js?>mina_js/backend.js"></script>
+    <script src="<?php echo $js ?>mina_js/backend.js"></script>
 </body>
 </html>
 <script>
@@ -404,7 +415,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     var DR_name = $("#firstname").val();
                     var codeforces_handle = $("#cfHandle").val();
                     var str = name + ":" + codeforces_handle + ":" + email + ":" + DR_name;
-                    $.post('<?php echo dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'ajax'.DIRECTORY_SEPARATOR;?>ajax_verify_instructor.php', {
+                    $.post('ajax/ajax_verify_instructor.php', {
                         str: str
                     }, function (html) {
                         $("#verification_code").val(html);

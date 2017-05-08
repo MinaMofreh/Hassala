@@ -16,7 +16,6 @@ if ($result = $stu->SignUp($var)) { // law 3ml retrive mn eldatabase
     $univeristy = $result['university'];
     $codeforces = $result['codeforces_handle'];
     $college_id = $result['college_id'];
-    echo $codeforces;
     if ($stu->validate_regestration($codeforces) == True) { // if first time regestrartion
         ?> 
         <style>

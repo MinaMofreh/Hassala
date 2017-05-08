@@ -15,7 +15,7 @@ class Admin_Queries {
         $data['college_id'] = $Student->get_college_id();
         $data['first_name'] = $Student->get_firstName();
         $data['last_name'] = $Student->get_lastName();
-        $data['university'] = $Student->get_univeristy();
+        $data['university'] = $Student->get_university();
         $data['rate'] = $Student->get_rate();
         $data['email'] = $Student->get_email();
         $data['gender'] = $Student->get_gender();

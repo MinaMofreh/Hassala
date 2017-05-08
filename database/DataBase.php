@@ -132,7 +132,7 @@ class DataBase {
             elseif (strtolower($val) == 'now()')
                 $q .= "`$key` = NOW(), ";
             else
-                $q .= "`$key`='" . $this->mysqli->escape_string($val) . "', ";
+                $q .= "`$key`='" . $this->mysqli->escape_string($this->mysqli,$val) . "', ";
         }
 
         $q = rtrim($q, ', ') . ' WHERE ' . $where . ';';
@@ -186,6 +186,9 @@ class DataBase {
         $stm1 = "SELECT COUNT(*) FROM `$table` WHERE `$field` = '$string'";
         $result = $this->get_row($stm1);
         return $result['COUNT(*)'];
+    }
+    public static function sql_injection($data){
+       return mysqli_real_escape_string($mysqli,$data);
     }
 
 }
