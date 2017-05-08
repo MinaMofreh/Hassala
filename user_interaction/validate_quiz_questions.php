@@ -269,7 +269,7 @@ class mcq_problem_validation {
                     $GLOBALS['quiz']->problems = $_SESSION['problem_array'];
                     $GLOBALS['quiz']->full_grade = $_SESSION['full_grade'];
                     $ins = new Instructor();
-                    $ins->CreateQuiz($GLOBALS['quiz'], 1, 2, $_SESSION['excel_sheet']);
+                    $ins->CreateQuiz($GLOBALS['quiz'], $_SESSION['quiz_course_id'], $_SESSION['instructor_id'], $_SESSION['excel_sheet']);
                     return TRUE;
                 } else {
                     return FALSE;

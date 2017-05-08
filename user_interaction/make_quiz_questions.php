@@ -169,6 +169,7 @@ if($val->submit_quiz()){
 </html>
 <?php } else {
     header("Location: home.php");
+    exit();
 }
 ?>
 

@@ -13,7 +13,7 @@
 <h2>Please, allow Camera request from browser</h2>
 <canvas id="qr-canvas" width="800" height="600"></canvas>
 
-<img src="qr.png" alt="qrcode Example"/>
+<img src="../images/mina_images/qr.PNG" alt="qrcode Example"/>
 <script type="text/javascript">load();</script>
 <script src="./jquery-1.11.2.min.js"></script>
 
@@ -22,6 +22,8 @@
         width:293px;
         background:rgba(255,20,20,0.9);
         height: 7px;
+        margin-left: 160px;
+        margin-bottom: 70px;
         font-weight: bold;
     }
     .test {
@@ -46,15 +48,15 @@
     }
     body{
         background-color:#4ad6c3;
-        background-image: url(../images/f.png);
+        background-image: url(../images/mina_images/f.png);
     }
     h2{
         padding-top: 120px;
-        padding-left: 350px;
+        padding-left: 500px;
         background-color: grey;
     }
     img{
-        padding-left: 500px;
+        padding-left: 680px;
         padding-top: 50px;	
     }
     #qr-canvas{

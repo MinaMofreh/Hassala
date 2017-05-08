@@ -96,6 +96,7 @@ and open the template in the editor.
 </html>
 <?php include_once 'templates' . DIRECTORY_SEPARATOR . 'footer' . DIRECTORY_SEPARATOR . 'footer.inc.php';} else {
     header("Location: home.php");
+    exit();
 }
 ?>
 

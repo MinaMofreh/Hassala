@@ -144,5 +144,6 @@ if (isset($_SESSION['instructor'])) {
     include_once 'templates' . DIRECTORY_SEPARATOR . 'footer' . DIRECTORY_SEPARATOR . 'footer.inc.php';
 } else {
     header("Location: home.php");
+    exit();
 }
 ?>

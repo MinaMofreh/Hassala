@@ -101,8 +101,8 @@ if (isset($_SESSION['instructor'])) {
                                 }
                                 ?>
                                 <td>                          <form action= "makeQuiz.php" method="POST">
-                                        <button class="btn btn-primary" type="submit" id ="MakeQuiz" name ="MakeQuiz" value = "<?php echo $corsID; ?>">Create Quiz</button><br><br>
                                         <input  value = "<?php echo $corsID; ?>" type="hidden" id ="crs_id" name = "crs_id">
+                                        <button class="btn btn-primary" type="submit" id ="MakeQuiz" name ="MakeQuiz" value = "<?php echo $corsID; ?>">Create Quiz</button><br><br>
                                     </form></td>
                             <?php }
                             ?>

@@ -8,6 +8,7 @@ include_once realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
 $quizVal = new QuizData();
 $quizVal->makQzValidation();
 $quizVal->getSheet();
+$_SESSION['quiz_course_id'] = $_POST['MakeQuiz'];
 $_SESSION['quiz_title'] = $quizVal->quiz_title;
 $_SESSION['quiz_description'] = $quizVal->quiz_description;
 $_SESSION['mcq_questions_num'] = $quizVal->mcq_questions_num;
@@ -268,5 +269,6 @@ $_SESSION['quizHeld'] = $quizVal->quizHeld;
 </html>
 <?php } else {
      header("Location: home.php");
+     exit();
 }
 ?>

@@ -88,5 +88,6 @@ $instructor_username = $instructor->get_username();
 </html>
 <?php } else {
     header ("Location: home.php");
+    exit();
 }
 ?>

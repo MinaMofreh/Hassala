@@ -166,5 +166,6 @@ class QuizData {
 }
 } else {
     header("Location: home.php");
+    exit();
 }
 ?>
