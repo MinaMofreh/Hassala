@@ -1,0 +1,41 @@
+@font-face {
+    font-family: 'Charger'; 
+    src: url('fonts/Charger.otf'); 
+}
+@font-face {
+  font-family: 'opificio';
+  src: url('opificio_bold.ttf');
+}
+body{background-color: #e6f3ff}
+/*profile page style*/
+.profileContainer{
+	margin-top: 90px;
+	margin-bottom: 70px;
+	border-radius: 10px;
+}
+img.avatar {
+  border: 1px solid #eee;
+}
+.only-bottom-margin {
+  margin-top: 0px;
+}
+.profilePhoto{
+	width: 200px;
+	height: 200px;
+	border: 5px double #337ab7;
+	border-radius: 10px;
+}
+h1{
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: 45px;
+	font-weight: bold;
+	color: #337ab7;
+}
+h2{
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: 35px;
+	font-weight: bolder;
+}
+.information{
+	font-size: 18px;
+}

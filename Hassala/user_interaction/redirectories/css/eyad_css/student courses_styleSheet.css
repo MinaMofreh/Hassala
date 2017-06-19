@@ -1,0 +1,47 @@
+@font-face {
+  font-family: 'opificio';
+  src: url('opificio_bold.ttf');
+}
+body {background-color: #e6f3ff;}
+.container-fluid{
+	background-color: #fff;
+	border-radius: 10px;
+}
+.myContainer {margin: 90px 70px;}
+h1,h2{
+	font-family: 'opificio';
+}
+.headTable{
+	background-color: #337ab7;
+	color: white;
+}
+td{
+	font-weight: bolder;
+}
+/*
+.toBeToggled{
+	border: #337ab7 1px solid;
+	margin-bottom: 20px;
+	margin-top: -20px;
+}
+*/
+.btn-primary{
+	border-radius: 4px;
+	width: 170px;
+	height: 40px;
+	font-size: 16px;
+	font-weight: bold;
+}
+.submitBtn{
+	border-radius: 4px;
+	border-color: #2e6da4;
+	width: 120px;
+	height: 40px;
+	font-size: 16px;
+	background-color: #337ab7;
+	color: white;
+	margin-right: 25px;
+}
+.id_p{
+	margin-right: 58px;
+}

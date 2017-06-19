@@ -1,0 +1,105 @@
+
+/*start slider*/
+.carousel .item {
+  height: 660px;
+}
+/*end slider*/
+/*start forms*/
+.modal-header span{
+    color:blue;
+}
+.modal-header .signupspan{
+    color:blue;
+}
+.modal-backdrop.in {
+	opacity: 0.7;
+}
+.modal-header{
+    background-color:#1db8e8;
+    border-radius: 2px;
+    
+}
+#fot2{
+    background-color:#797b7f;
+    border-radius: 3px;
+}
+#fot1{
+     background-color:transparent;
+    border-top: 0px;
+}
+/*end forms*/
+/*start footer*/
+.footer{
+	background-color: #060d14;
+	color: #fff;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin: 00px 0 00px;
+}
+.logo{
+	font-family: "koffi";
+	color: #cc0066;
+	font-size: 50px;
+	letter-spacing: 3px;
+	margin-left: 5px;
+}
+.footer a{
+	text-decoration: none;
+	color: #33d6ff;
+}
+.footer a:hover {color: #fff;}
+.copyrights {color: #007a99}
+.copyleft {
+  display:inline-block;
+  transform: rotate(180deg);
+}
+.sitemap, .visitus {
+	color: #33d6ff;
+	font-family: "opificio";
+	font-size: 40px;
+}
+.footer li{
+	text-transform: uppercase;
+	margin-left: 10px;
+
+}
+.footer li a {color: #fff;}
+.footer li a:hover {color: #33d6ff;}
+.locationPic{
+	width: 30px;
+	height: 30px;
+}
+.title , .locationPic {display: inline-table;}
+.locationPic {margin: 0 10px;}
+.title {
+	text-transform: lowercase;
+	margin-bottom: 10px;
+}
+.mailPic{
+	width: 30px;
+	height: 30px;
+	margin: 0 10px;
+}
+.mail{text-transform: lowercase;}
+.phonePic{
+	width: 30px;
+	height: 30px;
+	margin: 20px 10px;
+}
+.social-list{
+	overflow: hidden;
+	margin: 0 0 30px -20PX;
+}
+.socialMedia {
+	width: 50px;
+	height: 50px;
+}
+.footer .social-list li{
+	float: left;
+	opacity: 0.7;
+	filter: alpha(opacity=70);
+}
+.footer .social-list li:hover{
+	opacity: 1;
+}
+/*end footer*/

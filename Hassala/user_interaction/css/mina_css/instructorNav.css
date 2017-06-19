@@ -1,0 +1,18 @@
+
+.navbar-inverse .navbar-nav > .active >a{
+    background-color:#505254;
+    color:black;
+    font-family: cursive;
+    margin-left: 120px;
+    width: 50x;
+}
+.navbar-brand{
+    font-family: monospace;
+    font-size: 30px;
+}
+.container-fluid .username{
+	padding-top:10px;
+	color: #4286f4;
+	font-style: fantasy;
+	font-size: 15px;
+}

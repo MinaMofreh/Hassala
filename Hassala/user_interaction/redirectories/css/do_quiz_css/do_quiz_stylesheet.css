@@ -1,0 +1,37 @@
+@font-face {
+    font-family: sansation-light;
+    src: url(sansation_light.woff);
+}
+hr {
+    font-size: 1px;
+    border-top: 2px solid #ccc;
+    border-bottom: 2px solid #ffffff;
+}
+#quiz-form {
+    background-color:#f2f2f2;
+}
+h5 {
+    font-weight: bold;
+    font-family: monospace;
+    text-decoration: underline;
+    
+}
+#submit-button {
+    background-color: #4CAF50;
+    width:100%;
+    font-family: cursive;
+    
+}
+#submit-button:hover {
+    background-color: #3e8e41
+}
+#caution-paragraph {
+    font-family: initial;
+    text-align: center;
+}
+#design-indent {
+    padding: 1% 1% 1% 1%;
+}
+pre {
+    text-align: left;
+}

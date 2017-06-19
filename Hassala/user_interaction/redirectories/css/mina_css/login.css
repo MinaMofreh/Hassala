@@ -1,0 +1,20 @@
+body{
+    background-image: url('../../images/mina_images/background2.jpg');
+}
+/*start Admin Login*/
+.login h2{
+    margin-left: 80px;
+    color:black;
+    font-size: 45px;
+}
+.login{
+	width: 400px;
+	margin : 50px auto;
+}
+.login input{
+margin-bottom: 10px;
+}
+.login .form-control{
+ background-color: #EAEAEA;
+}
+/*End Admin Login*/

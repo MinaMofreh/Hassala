@@ -1,0 +1,14 @@
+body{
+    background-image: url(../images/background2.JPG);
+}
+.container h2{
+	color:#000;
+}
+.contact-form{
+    max-width: 450px;
+    margin: 20px auto;
+}
+.contact-form input,
+.contact-form textarea{
+    margin-bottom: 10px;
+}
